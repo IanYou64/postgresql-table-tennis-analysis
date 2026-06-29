@@ -12,7 +12,7 @@ A PostgreSQL portfolio project analyzing a synthetic table tennis dataset, built
 | matches | Match results by sets won and tournament played | ~ 200,000 |
 
 ## Schema Diagram
-<img width="3893" height="6756" alt="image" src="https://github.com/user-attachments/assets/4824e1c9-9790-46b8-b184-cd1bfd12c548" />
+<img width="3893" height="6756" alt="image" src="https://github.com/user-attachments/assets/210f5c38-154d-4f9b-82c1-3547694976fc" />
 
 ## Database
 All data was synthetically generated from scratch using Python and incorporates many real-life trends (percentages of players using certain grips and brands depending on their demographics, rubber types depending on playstyle, player ratings depending on career length, etc.). Tournaments are divided into four levels: Club Leagues, Regional Opens, National Championships, and International WTT Majors, roughly corresponding to player rating ranges. All matches are best of 7 sets.
