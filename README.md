@@ -20,7 +20,7 @@ All data was synthetically generated from scratch using Python and incorporates 
 ## Tier 1: Core Aggregations and JOINs
 **Skills Demonstrated:** Aggregation, Multi-table JOIN, compound *OR* JOIN conditions, *FILTER*, *GROUP BY*, *HAVING*, *ORDER BY*
 
-1. Top 10 players by win rate (min of 16 matches played)
+1. Top 10 players by win rate (min of 16 matches)
    - Joins gen_info and matches using a compound OR condition to capture each player's full match history as both winner and loser
    - Use *FILTER(WHERE...)* to conditionally count wins using *COUNT()*
    - Use *ORDER BY win_rate DESC* and *LIMIT 10* to list only the top 10
@@ -32,3 +32,17 @@ All data was synthetically generated from scratch using Python and incorporates 
 3. Most commonly used rubber brand by players rated 2400 or above
    - Joins across three tables: rubber_info, equipment, and gen_info
    - Forehand and backhand uses are counted separately before they are summed. This avoids double-counting players who use the same brand on both sides
+
+## Tier 2: Window Functions
+**Skills Demonstrated:** _RANK(), DENSE_RANK(), PERCENT_RANK(), NTILE(), AVG() OVER_, self JOIN, CTE, _NULLIF()_, ::numeric casting
+
+1. Rank players within each country by win rate using both _RANK()_ and _DENSE_RANK()_
+   - Use CTE to pre-calculate win rates since PostgreSQL doesn't allow aggregate functions in _OVER()_ clauses
+   - _RANK()_ skips ranking numbers in the case of a tie, while _DENSE_RANK()_ doesn't skip
+  
+2. Compare each player's win rates against opponents ranked higher than them vs those ranked lower (min of 16 matches)
+   - Self JOIN on gen_info to access both players' ratings in the same row
+   - _CASE_ dynamically determines the opponent's player_id for each match
+   - _NULLIF()_ is used to prevent divide by 0 errors in cases where players only faced people rated higher/lower than them
+  
+3. 
