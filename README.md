@@ -44,5 +44,3 @@ All data was synthetically generated from scratch using Python and incorporates 
    - Self JOIN on gen_info to access both players' ratings in the same row
    - _CASE_ dynamically determines the opponent's player_id for each match
    - _NULLIF()_ is used to prevent divide by 0 errors in cases where players only faced people rated higher/lower than them
-  
-3. 
