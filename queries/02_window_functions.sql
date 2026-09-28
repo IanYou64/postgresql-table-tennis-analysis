@@ -27,24 +27,24 @@
 		   COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating > opponent.rating) + 
 		   		COUNT(*) FILTER (WHERE m.loser_id = gi.player_id AND gi.rating > opponent.rating) AS total_vs_lower,
 		   ROUND(COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating > opponent.rating) * 100.0 / 					      	-- Calculating win rate against 
-		   		NULLIF (																											                                                    -- players who are rated lower;
-		   			COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating > opponent.rating) + 							              -- NULLIF used so that if there
-		   			COUNT(*) FILTER (WHERE m.loser_id = gi.player_id AND gi.rating > opponent.rating), 0), 2) AS win_rate_vs_lower, -- are no matches against people
+		   		NULLIF (															                                                    -- players who are rated lower;
+		   			COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating > opponent.rating) + 							    -- NULLIF used so that if there
+		   			COUNT(*) FILTER (WHERE m.loser_id = gi.player_id AND gi.rating > opponent.rating), 0), 2) AS win_rate_vs_lower, 	-- are no matches against people
 		   COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating < opponent.rating) AS wins_vs_higher,				      	-- rated lower/higher, there
-		   COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating < opponent.rating) + 									              -- isn't a divide by 0 error
+		   COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating < opponent.rating) + 									    -- isn't a divide by 0 error
 		   		COUNT(*) FILTER (WHERE m.loser_id = gi.player_id AND gi.rating < opponent.rating) AS total_vs_higher,
 		   ROUND(COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating < opponent.rating) * 100.0 / 						-- Calculating win rate against
-		   		NULLIF (																											                                              -- players who are rated higher
+		   		NULLIF (																                                            -- players who are rated higher
 		   			COUNT(*) FILTER (WHERE m.winner_id = gi.player_id AND gi.rating < opponent.rating) + 
 		   			COUNT(*) FILTER (WHERE m.loser_id = gi.player_id AND gi.rating < opponent.rating), 0), 2) AS win_rate_vs_higher
 		   			
 		FROM gen_info gi
 		JOIN matches m
 			ON gi.player_id = m.winner_id OR gi.player_id = m.loser_id
-		JOIN gen_info opponent								    	-- Self JOIN used to access both the winner's and loser's ratings in the same row
-    		ON opponent.player_id = (CASE						-- CASE dynamically determines the opponent's player_id for each match:
-    	    	WHEN m.winner_id = gi.player_id THEN m.loser_id		-- If our current player won, then our opponent is the loser
-    	    	ELSE m.winner_id								                 	-- If our current player lost, then our opponent is the winner
+		JOIN gen_info opponent								   		-- Self JOIN used to access both the winner's and loser's ratings in the same row
+    		ON opponent.player_id = (CASE							-- CASE dynamically determines the opponent's player_id for each match:
+    	    	WHEN m.winner_id = gi.player_id THEN m.loser_id			-- If our current player won, then our opponent is the loser
+    	    	ELSE m.winner_id								  	 	-- If our current player lost, then our opponent is the winner
  		 	END)
   	  	GROUP BY gi.player_id, gi.name, gi.rating
 		HAVING COUNT(*) >= 16
@@ -56,10 +56,10 @@
 	
 -- 3. What percentile of the rating distribution does each player fall into within their playstyle?
 	SELECT gi.name, p.playstyle, gi.rating, 
-		   ROUND((1 - PERCENT_RANK() OVER (											                -- "1 - PERCENT_RANK()" inverts scale: top players score near 100 instead of 0
-		   		PARTITION BY p.playstyle										                     	-- ::numeric casting is necessary because PERCENT_RANK() returns double
-		   		ORDER BY rating DESC))::numeric * 100, 2) AS percent_rank_score,	-- precision, which ROUND() doesn't accept
-		   NTILE(100) OVER (														         -- NTILE(n) buckets players into n equal groups, determined by rating
+		   ROUND((1 - PERCENT_RANK() OVER (												    -- "1 - PERCENT_RANK()" inverts scale: top players score near 100 instead of 0
+		   		PARTITION BY p.playstyle									             	-- ::numeric casting is necessary because PERCENT_RANK() returns double
+		   		ORDER BY rating DESC))::numeric * 100, 2) AS percent_rank_score,			-- precision, which ROUND() doesn't accept
+		   NTILE(100) OVER (			         -- NTILE(n) buckets players into n equal groups, determined by rating
 		   		PARTITION BY p.playstyle
 		   		ORDER BY rating DESC) AS rating_percentile,
 		   NTILE(4) OVER (
@@ -76,7 +76,7 @@
 		   spin,
 		   ROUND((AVG(spin) OVER (PARTITION BY type))::numeric, 2) AS avg_spin,
 		   ROUND((spin - AVG(spin) OVER (PARTITION BY type))::numeric, 2) AS spin_diff			-- Adding this would create an average that would expand row by row 
-	FROM rubber_info																			                                -- rather than a fixed group-level average
+	FROM rubber_info																			-- rather than a fixed group-level average
 	ORDER BY type, rubber_id;
 
 -- 5. For each blade, how does its speed and stiffness compare to the average for its composition?
