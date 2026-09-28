@@ -9,7 +9,7 @@ A PostgreSQL portfolio project analyzing a synthetic table tennis dataset, built
 | equipment | Blade and rubber assignments | 10,000 |
 | rubber_info | Rubber specifications | 152 |
 | blade_info | Blade specifications | 106 |
-| matches | Match results by sets won and tournament played | ~ 200,000 |
+| matches | Match results by sets won and tournament played | ~ 120,000 |
 
 ## Schema Diagram
 <img width="3893" height="6756" alt="image" src="https://github.com/user-attachments/assets/210f5c38-154d-4f9b-82c1-3547694976fc" />
