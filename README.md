@@ -48,13 +48,37 @@ All data was synthetically generated from scratch using Python and incorporates 
    - _PARTITION BY_ p.playstyle ensures players are ranked relative to others in their own playstyle category
    - _NTILE(4)_ and _NTILE(100)_ are included in the same query to show that the function accepts any bucket count
 
-4. Compare each rubber's cost and spin relative to the average for its type
+4a. Compare each rubber's cost and spin relative to the average for its type
    - _AVG() OVER (PARTITION BY type)_ computes a fixed group-level average for all rubbers of the same type
    - _cost_diff_ and _spin_diff_ show deviation from the type average: positive means above average, negative means below
    - _::numeric_ cast required because _AVG()_ on integer columns returns double precision in PostgreSQL, which _ROUND()_ does not accept directly
   
-5. Compare each blade's speed and stiffness relative to the average for its composition
+4b. Compare each blade's speed and stiffness relative to the average for its composition
    - Same _AVG() OVER_ pattern from query 4 applied to blade_info, partitioned by composition rather than type
 
 ## Tier 3: CTEs and Subqueries
-**Skills Demonstrated:** Chained CTEs, scalar subquery in _HAVING_, derived table in _FROM_, correlated subqueries in _SELECT_, cross-partition correlated subqueries
+**Skills Demonstrated:** Chained CTEs, derived table in _FROM_, correlated subqueries in _SELECT_, cross-partition correlated subqueries
+
+1. How upset rates vary across tournament levels and which tournament produces the most upsets
+   - The match_ratings CTE handles the complex double JOIN and upset flagging
+   - The tournament_upset_rates handles the calculations of upset win rate statistics
+   - gen_info is joined twice under both gi_winner and gi_loser to access both players' ratings in the same row
+  
+2. Compare each career year bracket's win rates with each other to see which one wins their matches most convincingly on average
+   - _CASE_ bucketing inside the CTE groups players into career year ranges before aggregation
+   - avg_set_diff measures how convincingly a player wins rather than just whether they win (the greater the avg_set_diff, the more convincing the win)
+   - _SUM(is_wins)_ aggregates pre-computed per-player win counts across the bracket, which avoids re-joining matches
+
+3. Compare the win rates across different combinations of playstyle, grip, and playing hand
+   - Two levels of aggregation required: per player inside the derived table and per playstyle/grip/hand combination in the outer query
+   - Derived table chosen over CTE since the subquery is a single-use stepping stone with no standalone meaning
+   - Three-table JOIN inside the derived table with compound OR join on matches to see each player's full match history (as both winner and loser)
+
+4a. For each rubber, count how many rubbers of the same type are faster but less controlled, and how many are harder but spinnier
+   - First subquery tests the speed/control tradeoff
+   - Second subquery tests the hardness/spin relationship
+  
+4b. For each blade, count how many rubbers of the same playstyle are stiffer but less controlled, and how many of the same composition are more consistent
+   - Two correlated subqueries partition on different **columns**: stiffness/control partitions by playstyle and consistency partitions by composition
+   - First subquery tests the stiffness/control tradeoff within playstyle
+   - Second subquery tests composition as a predictor of consistency
