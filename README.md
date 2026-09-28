@@ -27,7 +27,6 @@ All data was synthetically generated from scratch using Python and incorporates 
   
 2. Average ratings of players using each playstyle (with at least 10 players), grouped by country
    - Joins preferences to segment rating averages by both country and playstyle simultaneously
-   - Use *FLOOR* to demonstrate familiarity with multiple rounding functions
   
 3. Most commonly used rubber brand by players rated 2400 or above
    - Joins across three tables: rubber_info, equipment, and gen_info
@@ -44,3 +43,18 @@ All data was synthetically generated from scratch using Python and incorporates 
    - Self JOIN on gen_info to access both players' ratings in the same row
    - _CASE_ dynamically determines the opponent's player_id for each match
    - _NULLIF()_ is used to prevent divide by 0 errors in cases where players only faced people rated higher/lower than them
+
+3. Each player's percentile of the rating distribution within their playstyle
+   - _PARTITION BY_ p.playstyle ensures players are ranked relative to others in their own playstyle category
+   - _NTILE(4)_ and _NTILE(100)_ are included in the same query to show that the function accepts any bucket count
+
+4. Compare each rubber's cost and spin relative to the average for its type
+   - _AVG() OVER (PARTITION BY type)_ computes a fixed group-level average for all rubbers of the same type
+   - _cost_diff_ and _spin_diff_ show deviation from the type average: positive means above average, negative means below
+   - _::numeric_ cast required because _AVG()_ on integer columns returns double precision in PostgreSQL, which _ROUND()_ does not accept directly
+  
+5. Compare each blade's speed and stiffness relative to the average for its composition
+   - Same _AVG() OVER_ pattern from query 4 applied to blade_info, partitioned by composition rather than type
+
+## Tier 3: CTEs and Subqueries
+**Skills Demonstrated:** _RANK(), DENSE_RANK(), PERCENT_RANK(), NTILE(), AVG() OVER_, self JOIN, CTE, _NULLIF()_, ::numeric casting
