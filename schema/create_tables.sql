@@ -12,8 +12,8 @@ CREATE TABLE public.preferences (
 	hand varchar(50) NULL,
 	grip varchar(50) NULL,
 	playstyle varchar(50) NULL
-  CONSTRAINT preferences_pkey PRIMARY KEY (player_id),
-  CONSTRAINT preferences_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.gen_info(player_id)
+  	CONSTRAINT preferences_pkey PRIMARY KEY (player_id),
+  	CONSTRAINT preferences_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.gen_info(player_id)
 );
 
 CREATE TABLE public.rubber_info (
@@ -26,7 +26,7 @@ CREATE TABLE public.rubber_info (
 	spin int4 NULL,
 	speed int4 NULL,
 	"control" int4 NULL
-  CONSTRAINT rubber_info_pkey PRIMARY KEY (rubber_id)
+  	CONSTRAINT rubber_info_pkey PRIMARY KEY (rubber_id)
 );
 
 CREATE TABLE public.blade_info (
@@ -43,7 +43,7 @@ CREATE TABLE public.blade_info (
 	stiffness int4 NULL,
 	hardness int4 NULL,
 	consistency int4 NULL
-  CONSTRAINT blade_info_pkey PRIMARY KEY (blade_id)
+  	CONSTRAINT blade_info_pkey PRIMARY KEY (blade_id)
 );
 
 CREATE TABLE public.equipment (
@@ -66,7 +66,7 @@ CREATE TABLE public.matches (
 	winner_sets int4 NULL,
 	loser_sets int4 NULL,
 	tournament varchar(50) NULL
-  CONSTRAINT matches_pkey PRIMARY KEY (match_id),
-  CONSTRAINT matches_winner_fkey FOREIGN KEY (winner_id) REFERENCES public.gen_info(player_id),
-  CONSTRAINT matches_loser_fkey FOREIGN KEY (loser_id) REFERENCES public.gen_info(player_id)
+  	CONSTRAINT matches_pkey PRIMARY KEY (match_id),
+  	CONSTRAINT matches_winner_fkey FOREIGN KEY (winner_id) REFERENCES public.gen_info(player_id),
+  	CONSTRAINT matches_loser_fkey FOREIGN KEY (loser_id) REFERENCES public.gen_info(player_id)
 );
