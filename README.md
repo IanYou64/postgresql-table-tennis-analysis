@@ -74,11 +74,11 @@ All data was synthetically generated from scratch using Python and incorporates 
    - Derived table chosen over CTE since the subquery is a single-use stepping stone with no standalone meaning
    - Three-table JOIN inside the derived table with compound OR join on matches to see each player's full match history (as both winner and loser)
 
-4a. For each rubber, count how many rubbers of the same type are faster but less controlled, and how many are harder but spinnier
+4. For each rubber, count how many rubbers of the same type are faster but less controlled, and how many are harder but spinnier
    - First subquery tests the speed/control tradeoff
    - Second subquery tests the hardness/spin relationship
   
-4b. For each blade, count how many rubbers of the same playstyle are stiffer but less controlled, and how many of the same composition are more consistent
+5. For each blade, count how many rubbers of the same playstyle are stiffer but less controlled, and how many of the same composition are more consistent
    - Two correlated subqueries partition on different **columns**: stiffness/control partitions by playstyle and consistency partitions by composition
    - First subquery tests the stiffness/control tradeoff within playstyle
    - Second subquery tests composition as a predictor of consistency
