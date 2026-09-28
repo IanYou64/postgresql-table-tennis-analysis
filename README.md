@@ -57,4 +57,4 @@ All data was synthetically generated from scratch using Python and incorporates 
    - Same _AVG() OVER_ pattern from query 4 applied to blade_info, partitioned by composition rather than type
 
 ## Tier 3: CTEs and Subqueries
-**Skills Demonstrated:** _RANK(), DENSE_RANK(), PERCENT_RANK(), NTILE(), AVG() OVER_, self JOIN, CTE, _NULLIF()_, ::numeric casting
+**Skills Demonstrated:** Chained CTEs, scalar subquery in _HAVING_, derived table in _FROM_, correlated subqueries in _SELECT_, cross-partition correlated subqueries
